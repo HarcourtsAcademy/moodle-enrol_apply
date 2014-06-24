@@ -16,7 +16,7 @@ $string['pluginname'] = 'Course enrol confirmation';
 $string['confirmmailsubject'] = 'Confirm mail subject';
 $string['confirmmailcontent'] = 'Confirm mail content';
 $string['cancelmailsubject'] = 'Cancel mail subject';
-$string['cancelmailcontent'] = 'Cancel mail sontent';
+$string['cancelmailcontent'] = 'Cancel mail content';
 $string['mailaddress'] = 'Send mail address';
 $string['mailusername'] = 'Send mail username';
 $string['mailpassword'] = 'Send mail password';
@@ -45,10 +45,10 @@ $string['apply:unenrolapply'] = 'Cancel self from the course';
  
 // Description of your plugin. Shown on the plugin's configuration screen.
 $string['description'] = '';
-$string['notification'] = '<b>Enrollment Application successfully sent</b>. <br/><br/>You will be informed by email as soon as your enrollment has been confirmed. If you want to enroll to other courses, please click "course catalogue" in the top menu.';
+$string['notification'] = '<b>Enrolment registration successfully sent.</b> <br/><br/>You\'ll be notified by email when the course begins.';
 
 $string['sendmailtoteacher'] = 'Send email notification to teachers';
-$string['mailtoteacher_suject'] = 'New Enrollment request!';
+$string['mailtoteacher_subject'] = 'New enrolment request from {$a}';
 $string['setting_edit'] = 'Edit';
 $string['editdescription'] = 'Enrolment form description';
 $string['applymanage'] = 'Manage enrolment applications';

@@ -36,7 +36,7 @@ class enrol_apply_plugin extends enrol_plugin {
 		if ($DB->record_exists('user_enrolments', array('userid'=>$USER->id, 'enrolid'=>$instance->id))) {
 			//TODO: maybe we should tell them they are already enrolled, but can not access the course
 			//return null;
-			return $OUTPUT->notification(get_string('notification', 'enrol_apply'));
+			return $OUTPUT->container(get_string('notification', 'enrol_apply'), 'alert alert-success');
 		}
 
 		if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
@@ -80,7 +80,7 @@ class enrol_apply_plugin extends enrol_plugin {
 				}
 
 				$this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend,1);
-				sendConfirmMailToTeachers($instance->courseid,$data->applydescription);
+				sendConfirmMailToTeachers($instance->courseid);
 				
 				add_to_log($instance->courseid, 'course', 'enrol', '../enrol/users.php?id='.$instance->courseid, $instance->courseid); //there should be userid somewhere!
 				redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
@@ -208,24 +208,26 @@ function sendConfirmMail($info){
 	email_to_user($info, $contact, $apply_setting['confirmmailsubject']->value, '', $body);
 }
 
-function sendConfirmMailToTeachers($courseid,$desc){
+function sendConfirmMailToTeachers($courseid){
 	global $DB;
 	global $CFG;
+    global $SITE;
 	global $USER;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 	
 	if($apply_setting['sendmailtoteacher']->value == 1){
 		$course = $DB->get_record('course',array('id'=>$courseid));
 		$context = get_context_instance(CONTEXT_COURSE, $courseid, MUST_EXIST);
-		$teacherType = $DB->get_record('role',array("shortname"=>"editingteacher"));
+		$teacherType = $DB->get_record('role',array("archetype"=>"editingteacher"));
 		$teachers = $DB->get_records('role_assignments', array('contextid'=>$context->id,'roleid'=>$teacherType->id));
 		foreach($teachers as $teacher){
 			$editTeacher = $DB->get_record('user',array('id'=>$teacher->userid));
-			$body = '<p>Course: '.$course->fullname.'</p><p>First name: '.$USER->firstname.'</p><p>Last name: '.$USER->lastname.'</p><p>Information: '.$desc.'</p>';
+			$body = '<p><a href="'.$CFG->wwwroot.'/course/view.php?id='.$courseid.'">Course: '.$course->fullname.'</a></p>'
+                    . '<p>First name: '.$USER->firstname.'</p><p>Last name: '.$USER->lastname.'</p>';
 			$contact = get_admin();
 			$info = $editTeacher;
 			$info->coursename = $course->fullname;
-			email_to_user($info, $contact, get_string('mailtoteacher_suject', 'enrol_apply'), '', $body);
+			email_to_user($info, $contact, get_string('mailtoteacher_subject', 'enrol_apply', $SITE->fullname), '', $body);
 		}
 	}
 }
