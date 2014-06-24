@@ -25,6 +25,8 @@ $string['cancelmailcontent_desc'] = 'Please use special marks designated email c
 
 $string['confirmusers'] = 'Enrol Confirm';
 
+$string['submitenrolment'] = 'Register';
+
 $string['coursename'] = 'Course';
 $string['applyuser'] = 'First name / Surname';
 $string['applyusermail'] = 'Email';
@@ -48,6 +50,6 @@ $string['notification'] = '<b>Enrollment Application successfully sent</b>. <br/
 $string['sendmailtoteacher'] = 'Send email notification to teachers';
 $string['mailtoteacher_suject'] = 'New Enrollment request!';
 $string['setting_edit'] = 'Edit';
-$string['editdescription'] = 'Textarea description';
+$string['editdescription'] = 'Enrolment form description';
 $string['applymanage'] = 'Manage enrolment applications';
 ?>
