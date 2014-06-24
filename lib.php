@@ -189,7 +189,8 @@ function sendCancelMail($info){
 	global $CFG;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 
-	$replace = array('firstname'=>$info->firstname,'content'=>$info->coursename);
+    $course = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$info->courseid.'">' . $info->coursename . '</a>';
+	$replace = array('firstname'=>$info->firstname,'content'=>$course);
 	$body = $apply_setting['cancelmailcontent']->value;
 	$body = updateMailContent($body,$replace);
 	$contact = get_admin();
