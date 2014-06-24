@@ -201,7 +201,8 @@ function sendConfirmMail($info){
 	global $CFG;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 
-	$replace = array('firstname'=>$info->firstname,'content'=>$info->coursename);
+    $course = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$info->courseid.'">' . $info->coursename . '</a>';
+	$replace = array('firstname'=>$info->firstname,'content'=>$course);
 	$body = $apply_setting['confirmmailcontent']->value;
 	$body = updateMailContent($body,$replace);
 	$contact = get_admin();
@@ -235,7 +236,7 @@ function sendConfirmMailToTeachers($courseid){
 function getRelatedInfo($enrolid){
 	global $DB;
 	global $CFG;
-	return $DB->get_record_sql('select u.*,c.fullname as coursename from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left
+	return $DB->get_record_sql('select u.*,c.fullname as coursename, c.id as courseid from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left
 	join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.id='.$enrolid);
 }
 
