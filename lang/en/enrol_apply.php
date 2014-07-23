@@ -17,18 +17,20 @@ $string['pluginname_desc'] = 'With this plugin users can apply to a course and a
 $string['confirmmailsubject'] = 'Confirm mail subject';
 $string['confirmmailcontent'] = 'Confirm mail content';
 $string['cancelmailsubject'] = 'Cancel mail subject';
-$string['cancelmailcontent'] = 'Cancel mail sontent';
+$string['cancelmailcontent'] = 'Cancel mail content';
 $string['confirmmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name';
 $string['cancelmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name';
 
 $string['confirmusers'] = 'Enrol Confirm';
 
+$string['submitenrolment'] = 'Register';
+
 $string['coursename'] = 'Course';
 $string['applyuser'] = 'First name / Surname';
 $string['applyusermail'] = 'Email';
 $string['applydate'] = 'Enrol date';
-$string['btnconfirm'] = 'Confirm';
-$string['btncancel'] = 'Cancel';
+$string['btnconfirm'] = 'Confirm enrolments';
+$string['btncancel'] = 'Cancel enrolments';
 $string['enrolusers'] = 'Enrol users';
 
 $string['status'] = 'Allow Course enrol confirmation';
@@ -39,11 +41,11 @@ $string['apply:manage'] = 'Manage apply enrolment';
 $string['apply:unenrol'] = 'Cancel users from course';
 $string['apply:unenrolapply'] = 'Cancel self from the course';
  
-$string['notification'] = '<b>Enrollment Application successfully sent</b>. <br/><br/>You will be informed by email as soon as your enrollment has been confirmed. If you want to enroll to other courses, please click "course catalogue" in the top menu.';
+$string['notification'] = '<b>Enrolment registration successfully sent.</b> <br/><br/>You\'ll be notified by email when the course begins.';
 
 $string['sendmailtoteacher'] = 'Send email notification to teachers';
-$string['mailtoteacher_suject'] = 'New Enrollment request!';
-$string['editdescription'] = 'Textarea description';
+$string['mailtoteacher_subject'] = 'New enrolment request from {$a}';
+$string['editdescription'] = 'Enrolment form description';
 $string['applymanage'] = 'Manage enrolment applications';
 
 $string['status_desc'] = 'Allow course access of internally enrolled users.';

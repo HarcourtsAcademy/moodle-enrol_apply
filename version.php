@@ -10,9 +10,9 @@
  * ************************************************************************
 */
 /**
- * Short answer question type version information.
+ * Apply Enrolment version information.
  *
- * @package    enrol apply
+ * @package    enrol_apply
  * @copyright  Emeneo {@link http://www.emeneo.com/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

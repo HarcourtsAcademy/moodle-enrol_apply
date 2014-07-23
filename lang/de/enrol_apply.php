@@ -42,7 +42,7 @@ $string['apply:unenrolapply'] = 'Sich selbst aus dem Kurs entfernen';
 $string['notification'] = '<b>Einschreibungsantrag wurde erfolgreich gesendet.</b>. <br/><br/>Sie werden via Mail informiert, sobald Ihre Einschreibung bestätigt wurde.';
 
 $string['sendmailtoteacher'] = 'Sende eine Hinweis-E-Mail an den Trainer';
-$string['mailtoteacher_suject'] = 'Neue Anfrage zur Einschreibung';
+$string['mailtoteacher_subject'] = 'Neue Anfrage zur Einschreibung';
 $string['editdescription'] = 'Beschreibung anpassen';
 $string['applymanage'] = 'Manage enrolment applications';
 

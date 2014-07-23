@@ -42,7 +42,7 @@ $string['apply:unenrolapply'] = 'Cancelar minha matrícula do curso'; // Needs m
 $string['notification'] = '<b>Solicitação de matrícula enviada com sucesso</b>. <br/><br/>Você será notificado por e-mail quando a sua matrícula for confirmada.';
 
 $string['sendmailtoteacher'] = 'Enviar e-mail de notificação para professores';
-$string['mailtoteacher_suject'] = 'Nova solicitação de inscrição!';
+$string['mailtoteacher_subject'] = 'Nova solicitação de inscrição!';
 $string['editdescription'] = 'Descrição'; 
 $string['applymanage'] = 'Manage enrolment applications'; // needs to be translated
 
