@@ -10,6 +10,9 @@
  * ************************************************************************
 */
 require ('../../config.php');
+require_once($CFG->dirroot.'/enrol/renderer.php');
+require_once($CFG->dirroot.'/enrol/locallib.php');
+require_once($CFG->dirroot.'/lib/outputcomponents.php');
 require_once ('lib.php');
 
 $site = get_site ();
@@ -50,14 +53,17 @@ echo '<input type="hidden" id="type" name="type" value="confirm">';
 echo '<table class="generalbox editcourse boxaligncenter"><tr class="header">';
 echo '<th class="header" scope="col">&nbsp;</th>';
 echo '<th class="header" scope="col">' . get_string ( 'coursename', 'enrol_apply' ) . '</th>';
+echo '<th class="header" scope="col">&nbsp;</th>';
 echo '<th class="header" scope="col">' . get_string ( 'applyuser', 'enrol_apply' ) . '</th>';
 echo '<th class="header" scope="col">' . get_string ( 'applyusermail', 'enrol_apply' ) . '</th>';
 echo '<th class="header" scope="col">' . get_string ( 'applydate', 'enrol_apply' ) . '</th>';
 echo '</tr>';
 foreach ( $enrols as $enrol ) {
+	$picture = get_user_picture($enrol->userid);
 	echo '<tr><td><input type="checkbox" name="enrolid[]" value="' . $enrol->id . '"></td>';
 	echo '<td>' . $enrol->course . '</td>';
-	echo '<td>' . $enrol->firstname . ' ' . $enrol->lastname . '</td>';
+	echo '<td>' . $OUTPUT->render($picture) . '</td>';
+	echo '<td>'.$enrol->firstname . ' ' . $enrol->lastname.'</td>';
 	echo '<td>' . $enrol->email . '</td>';
 	echo '<td>' . date ( "Y-m-d", $enrol->timecreated ) . '</td></tr>';
 }
@@ -66,3 +72,15 @@ echo '<p align="center"><input type="button" value="' . get_string ( 'btnconfirm
 echo '</form>';
 echo '<script>function doSubmit(type){if(type=="cancel"){document.getElementById("type").value=type;}document.getElementById("frmenrol").submit();}</script>';
 echo $OUTPUT->footer ();
+
+
+function get_user_picture($userid){
+	global $DB;
+
+    $extrafields[] = 'lastaccess';
+    $ufields = user_picture::fields('u', $extrafields);
+	$sql = "SELECT DISTINCT $ufields FROM {user} u where u.id=$userid";
+          
+    $user = $DB->get_record_sql($sql);
+	return new user_picture($user);
+}

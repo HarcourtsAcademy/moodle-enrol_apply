@@ -11,6 +11,19 @@
 */
 class enrol_apply_plugin extends enrol_plugin {
 
+	/**
+	* Add new instance of enrol plugin with default settings.
+	* @param object $course
+	* @return int id of new instance
+	*/
+	public function add_default_instance($course) {
+		$fields = array(
+		    'status'          => $this->get_config('status'),
+		    'roleid'          => $this->get_config('roleid', 0)
+		);
+		return $this->add_instance($course, $fields);
+	}
+
 	public function allow_unenrol(stdClass $instance) {
 		// users with unenrol cap may unenrol other users manually manually
 		return true;
@@ -36,7 +49,7 @@ class enrol_apply_plugin extends enrol_plugin {
 		if ($DB->record_exists('user_enrolments', array('userid'=>$USER->id, 'enrolid'=>$instance->id))) {
 			//TODO: maybe we should tell them they are already enrolled, but can not access the course
 			//return null;
-			return $OUTPUT->container(get_string('notification', 'enrol_apply'), 'alert alert-success');
+			return $OUTPUT->notification(get_string('notification', 'enrol_apply'));
 		}
 
 		if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
@@ -80,7 +93,7 @@ class enrol_apply_plugin extends enrol_plugin {
 				}
 
 				$this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend,1);
-				sendConfirmMailToTeachers($instance->courseid);
+				sendConfirmMailToTeachers($instance->courseid,$data->applydescription);
 				
 				add_to_log($instance->courseid, 'course', 'enrol', '../enrol/users.php?id='.$instance->courseid, $instance->courseid); //there should be userid somewhere!
 				redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
@@ -105,19 +118,19 @@ class enrol_apply_plugin extends enrol_plugin {
 
 		$icons = array();
 
-		if (has_capability("enrol/manual:manage", $context)) {
-			$editlink = new moodle_url("/enrol/apply/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
-            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class'=>'iconsmall')));
-		}
+		if (has_capability('enrol/manual:config', $context)) {
+            $editlink = new moodle_url("/enrol/apply/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core', array('class' => 'iconsmall')));
+        }
 
 		if (has_capability('enrol/manual:manage', $context)) {
 			$managelink = new moodle_url("/enrol/apply/apply.php", array('id'=>$_GET['id'],'enrolid'=>$instance->id));
-			$icons[] = $OUTPUT->action_icon($managelink, new pix_icon('i/checkpermissions', get_string('confirmenrol', 'enrol_apply'), 'core', array('class'=>'iconsmall')));
+			$icons[] = $OUTPUT->action_icon($managelink, new pix_icon('i/users', get_string('confirmenrol', 'enrol_apply'), 'core', array('class'=>'iconsmall')));
 		}
 
-		if (has_capability("enrol/manual:manage", $context)) {
-			$managelink = new moodle_url("/enrol/apply/enroluser.php", array('enrolid'=>$instance->id));
-			$icons[] = $OUTPUT->action_icon($managelink, new pix_icon('t/enrolusers', get_string('enrolusers', 'enrol_apply'), 'core', array('class'=>'iconsmall')));
+		if (has_capability("enrol/manual:enrol", $context)) {
+			$enrollink = new moodle_url("/enrol/apply/enroluser.php", array('enrolid'=>$instance->id));
+			$icons[] = $OUTPUT->action_icon($enrollink, new pix_icon('t/enrolusers', get_string('enrolusers', 'enrol_apply'), 'core', array('class'=>'iconsmall')));
 		}
 		
 		return $icons;
@@ -145,9 +158,9 @@ function getAllEnrolment($id = null){
 	global $DB;
 	global $CFG;
 	if($id){
-		$userenrolments = $DB->get_records_sql('select ue.id,u.firstname,u.lastname,u.email,c.fullname as course,ue.timecreated from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.status=1 and e.courseid='.$id);
+		$userenrolments = $DB->get_records_sql('select ue.userid,ue.id,u.firstname,u.lastname,u.email,u.picture,c.fullname as course,ue.timecreated from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.status=1 and e.courseid='.$id);
 	}else{
-		$userenrolments = $DB->get_records_sql('select ue.id,u.firstname,u.lastname,u.email,c.fullname as course,ue.timecreated from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.status=1');
+		$userenrolments = $DB->get_records_sql('select ue.userid,ue.id,u.firstname,u.lastname,u.email,u.picture,c.fullname as course,ue.timecreated from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.status=1');
 	}
 	return $userenrolments;
 }
@@ -189,8 +202,7 @@ function sendCancelMail($info){
 	global $CFG;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 
-    $course = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$info->courseid.'">' . $info->coursename . '</a>';
-	$replace = array('firstname'=>$info->firstname,'content'=>$course);
+	$replace = array('firstname'=>$info->firstname,'content'=>$info->coursename);
 	$body = $apply_setting['cancelmailcontent']->value;
 	$body = updateMailContent($body,$replace);
 	$contact = get_admin();
@@ -202,34 +214,31 @@ function sendConfirmMail($info){
 	global $CFG;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 
-    $course = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$info->courseid.'">' . $info->coursename . '</a>';
-	$replace = array('firstname'=>$info->firstname,'content'=>$course);
+	$replace = array('firstname'=>$info->firstname,'content'=>$info->coursename);
 	$body = $apply_setting['confirmmailcontent']->value;
 	$body = updateMailContent($body,$replace);
 	$contact = get_admin();
 	email_to_user($info, $contact, $apply_setting['confirmmailsubject']->value, '', $body);
 }
 
-function sendConfirmMailToTeachers($courseid){
+function sendConfirmMailToTeachers($courseid,$desc){
 	global $DB;
 	global $CFG;
-    global $SITE;
 	global $USER;
 	$apply_setting = $DB->get_records_sql("select name,value from ".$CFG->prefix."config_plugins where plugin='enrol_apply'");
 	
 	if($apply_setting['sendmailtoteacher']->value == 1){
 		$course = $DB->get_record('course',array('id'=>$courseid));
 		$context = get_context_instance(CONTEXT_COURSE, $courseid, MUST_EXIST);
-		$teacherType = $DB->get_record('role',array("archetype"=>"editingteacher"));
+		$teacherType = $DB->get_record('role',array("shortname"=>"editingteacher"));
 		$teachers = $DB->get_records('role_assignments', array('contextid'=>$context->id,'roleid'=>$teacherType->id));
 		foreach($teachers as $teacher){
 			$editTeacher = $DB->get_record('user',array('id'=>$teacher->userid));
-			$body = '<p><a href="'.$CFG->wwwroot.'/course/view.php?id='.$courseid.'">Course: '.$course->fullname.'</a></p>'
-                    . '<p>First name: '.$USER->firstname.'</p><p>Last name: '.$USER->lastname.'</p>';
+			$body = '<p>Course: '.$course->fullname.'</p><p>First name: '.$USER->firstname.'</p><p>Last name: '.$USER->lastname.'</p><p>Information: '.$desc.'</p>';
 			$contact = get_admin();
 			$info = $editTeacher;
 			$info->coursename = $course->fullname;
-			email_to_user($info, $contact, get_string('mailtoteacher_subject', 'enrol_apply', $SITE->fullname), '', $body);
+			email_to_user($info, $contact, get_string('mailtoteacher_suject', 'enrol_apply'), '', $body);
 		}
 	}
 }
@@ -237,7 +246,7 @@ function sendConfirmMailToTeachers($courseid){
 function getRelatedInfo($enrolid){
 	global $DB;
 	global $CFG;
-	return $DB->get_record_sql('select u.*,c.fullname as coursename, c.id as courseid from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left
+	return $DB->get_record_sql('select u.*,c.fullname as coursename from '.$CFG->prefix.'user_enrolments as ue left join '.$CFG->prefix.'user as u on ue.userid=u.id left join '.$CFG->prefix.'enrol as e on ue.enrolid=e.id left
 	join '.$CFG->prefix.'course as c on e.courseid=c.id where ue.id='.$enrolid);
 }
 
