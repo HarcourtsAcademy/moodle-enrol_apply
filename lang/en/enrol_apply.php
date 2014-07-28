@@ -41,7 +41,7 @@ $string['apply:manage'] = 'Manage apply enrolment';
 $string['apply:unenrol'] = 'Cancel users from course';
 $string['apply:unenrolapply'] = 'Cancel self from the course';
  
-$string['notification'] = '<b>Enrolment registration successfully sent.</b> <br/><br/>You\'ll be notified by email when the course begins.';
+$string['notification'] = '<b>You have successfully registered.</b> <br/><br/>You\'ll be notified by email when the course begins.';
 
 $string['sendmailtoteacher'] = 'Send email notification to teachers';
 $string['mailtoteacher_subject'] = 'New enrolment request from {$a}';
