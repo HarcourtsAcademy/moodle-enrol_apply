@@ -42,6 +42,9 @@ class enrol_apply_enrol_form extends moodleform {
         $this->instance = $instance;
         $plugin = enrol_get_plugin('self');
 
+        $heading = $plugin->get_instance_name($instance);
+        $mform->addElement('header', 'selfheader', $heading);
+
         if ($instance->password) {
             $heading = $plugin->get_instance_name($instance);
             $mform->addElement('header', 'selfheader', $heading);

@@ -17,9 +17,9 @@ $string['pluginname_desc'] = 'With this plugin users can apply to a course and a
 $string['confirmmailsubject'] = 'Confirm mail subject';
 $string['confirmmailcontent'] = 'Confirm mail content';
 $string['cancelmailsubject'] = 'Cancel mail subject';
-$string['cancelmailcontent'] = 'Cancel mail content';
-$string['confirmmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name';
-$string['cancelmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name';
+$string['cancelmailcontent'] = 'Cancel mail Content';
+$string['confirmmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name;{lastname}:The last name of the user;{username}:Registration name';
+$string['cancelmailcontent_desc'] = 'Please use special marks designated email content replaced.<br>{firstname}:Registration name; {content}:Course name;{lastname}:The last name of the user;{username}:Registration name';
 
 $string['confirmusers'] = 'Enrol Confirm';
 
@@ -44,8 +44,10 @@ $string['apply:unenrolapply'] = 'Cancel self from the course';
 $string['notification'] = '<b>You have successfully registered.</b> <br/><br/>You\'ll be notified by email when the course begins.';
 
 $string['sendmailtoteacher'] = 'Send email notification to teachers';
+$string['sendmailtomanager'] = 'Send email notification to managers';
 $string['mailtoteacher_subject'] = 'New enrolment request from {$a}';
 $string['editdescription'] = 'Enrolment form description';
+$string['comment'] = 'Comment';
 $string['applymanage'] = 'Manage enrolment applications';
 
 $string['status_desc'] = 'Allow course access of internally enrolled users.';

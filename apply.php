@@ -16,11 +16,11 @@ require_once($CFG->dirroot.'/lib/outputcomponents.php');
 require_once ('lib.php');
 
 $site = get_site ();
-$systemcontext = get_context_instance ( CONTEXT_SYSTEM );
+$systemcontext = context_system::instance();
 
 $id = required_param ( 'id', PARAM_INT ); // course id
 $course = $DB->get_record ( 'course', array ('id' => $id ), '*', MUST_EXIST );
-$context = get_context_instance ( CONTEXT_COURSE, $course->id, MUST_EXIST );
+$context =  context_course::instance($course->id, MUST_EXIST);
 
 require_login ( $course );
 require_capability ( 'moodle/course:enrolreview', $context );
@@ -61,7 +61,7 @@ echo '</tr>';
 foreach ( $enrols as $enrol ) {
 	$picture = get_user_picture($enrol->userid);
 	echo '<tr><td><input type="checkbox" name="enrolid[]" value="' . $enrol->id . '"></td>';
-	echo '<td>' . $enrol->course . '</td>';
+	echo '<td>' . format_string($enrol->course) . '</td>';
 	echo '<td>' . $OUTPUT->render($picture) . '</td>';
 	echo '<td>'.$enrol->firstname . ' ' . $enrol->lastname.'</td>';
 	echo '<td>' . $enrol->email . '</td>';
